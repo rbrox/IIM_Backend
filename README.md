@@ -55,7 +55,40 @@ The backend provides the following routes:
 Below is the schema of the PostgreSQL database used in this project:
 
 ```sql
--- Define your database schema here
+model User {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  name     String?
+  password String
+  posts    Post[]
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+}
+
+model Article {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  publishedAt DateTime @default(now())
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+}
+
+model Event {
+  id         String   @id @default(uuid())
+  title      String
+  venue      String
+  dateTime   DateTime
+  organizer  User     @relation(fields: [organizerId], references: [id])
+  organizerId String
+}
 ```
 
 ## Deployment
@@ -65,11 +98,3 @@ This backend can be deployed to Cloudflare Workers. Ensure you have the Wrangler
 ## Contributors
 
 - [Your Name] - [Your Email]
-
-## License
-
-This project is licensed under the [License Name] License - see the [LICENSE.md](LICENSE.md) file for details.
-
----
-
-Feel free to customize this README template according to your project's specific requirements and preferences. Let me know if you need further assistance!
